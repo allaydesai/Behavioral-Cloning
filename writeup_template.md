@@ -1,12 +1,16 @@
-# **Behavioral Cloning** 
+# Behaviorial Cloning Project
 
-## Writeup Template
+[![Udacity - Self-Driving Car NanoDegree](https://s3.amazonaws.com/udacity-sdc/github/shield-carnd.svg)](http://www.udacity.com/drive)
 
-### You can use this file as a template for your writeup if you want to submit it as a markdown file, but feel free to use some other method and submit a pdf if you prefer.
+Overview
 
 ---
 
-**Behavioral Cloning Project**
+This project uses deep neural networks and convolutional neural networks to clone driving behavior. I trained, validated and tested a model using Keras. The model outputs a steering angle to an autonomous vehicle.
+
+I used a simulator where I steered a car around a track for data collection. I used the collected image data and steering angles to train a neural network and then used this model to drive the car autonomously around the track.
+
+**Project Goals**
 
 The goals / steps of this project are the following:
 * Use the simulator to collect data of good driving behavior
@@ -15,6 +19,16 @@ The goals / steps of this project are the following:
 * Test that the model successfully drives around track one without leaving the road
 * Summarize the results with a written report
 
+**Project Files**
+
+The repository consists of the following files: 
+* model.py (script used to create and train the model)
+* drive.py (script to drive the car)
+* model.h5 (a trained Keras model)
+* a README writeup file (either markdown or pdf)
+* video.mp4 (a video recording of your vehicle driving autonomously around the track for at least one full lap)
+
+This README file describes how to output the video in the "Details About Files In This Directory" section.
 
 [//]: # (Image References)
 
