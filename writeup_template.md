@@ -104,10 +104,15 @@ The network architecture is shown below:
 | Fully connected				| 1 output, Linear activation        									|
 
 **Training**
+
 Epochs: 30 (Model stopped training after 8-12 epochs due to early stopping)
+
 Batch size: 128
+
 Loss Function: Mean Square Error
+
 Optimizer: Adam
+
 Metrics: Loss & Accuracy
 
 I used callback functions to ensure saving the best snapshot of the training process. This is the point when validation loss is lowest. 
@@ -115,8 +120,22 @@ Further, I added early stopping which monitors the validation loss and stops the
 
 Finally, I used the fit function to train the network. I chose the size of my validation dataset to be 20% of the training dataset with the option to shuffle the dataset. 
 
+## Model Evaluation
 
-#### 2. Submission includes functional code
+Upon completion of training, I evaluated the model based on the following principles:
+
+- Underfitting – Validation and training error high
+- Overfitting – Validation error is high, training error low
+- Good fit – Validation error low, slightly higher than the training error
+- Unknown fit - Validation error low, training error 'high'
+
+Plot showing the loss through the training process: 
+
+![alt text][image1]
+
+If I found the model to be overfitting, I added more regularization and if I found it to be underfitting I added cases where the model tends to fail. 
+
+
 Using the Udacity provided simulator and my drive.py file, the car can be driven autonomously around the track by executing 
 ```sh
 python drive.py model.h5
