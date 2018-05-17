@@ -56,13 +56,28 @@ The dataset was created by me performing laps around the test track in the simlu
 - Track2: Clockwise 1 lap
 
 Total examples = 25902
+
 Number of training examples = 20721 
+
 Number of testing examples = 0 (tested in the simulator environment)
+
 Number of validation examples = 5181
+
 Image data shape = (160, 320, 3)
+
 Labels data shape = (25902,)
 
-### Model Architecture and Training Strategy
+
+## Model Architecture and Training Strategy
+
+For the purpose of this project I chose the model architecture proposed by the autonomus team at nvidia in the following paper:
+https://devblogs.nvidia.com/deep-learning-self-driving-cars/
+
+I chose this as it has been tested previosuly on a similar appication. The model consists of a normalization layer followed by 5 convolutional layers followed by 4 fully-connected layers. The network uses convolutional strides to change image dimensions through the various layers.  
+
+To avoid overfitting, I added L2 regularization of weights on most layers and dropout between the fully connected layers. This should help the model avoid learning the training data. 
+
+The network architecture is shown below:
 
 | Layer         		|     Description	        					| 
 |:---------------------:|:---------------------------------------------:| 
@@ -87,6 +102,19 @@ Labels data shape = (25902,)
 | Fully connected		| 10 outputs, L2 regularize weights, RELU activation        									|
 | Dropout					|			0.3 - Regularization									|
 | Fully connected				| 1 output, Linear activation        									|
+
+**Training**
+Epochs: 30 (Model stopped training after 8-12 epochs due to early stopping)
+Batch size: 128
+Loss Function: Mean Square Error
+Optimizer: Adam
+Metrics: Loss & Accuracy
+
+I used callback functions to ensure saving the best snapshot of the training process. This is the point when validation loss is lowest. 
+Further, I added early stopping which monitors the validation loss and stops the training process if there is no change to loss value for defined amount of time. 
+
+Finally, I used the fit function to train the network. I chose the size of my validation dataset to be 20% of the training dataset with the option to shuffle the dataset. 
+
 
 #### 2. Submission includes functional code
 Using the Udacity provided simulator and my drive.py file, the car can be driven autonomously around the track by executing 
