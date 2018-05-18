@@ -37,7 +37,7 @@ This README file describes how to output the video in the "Details About Files I
 [image2]: ./Images/center_right_0_146.jpg "Right Turn Image"
 [image3]: ./Images/center_left-0_217.jpg "Left Turn Image"
 [image4]: ./Images/center_bridge_0.jpg "Bridge Road Image"
-[image5]: ./examples/Loss_plot.png "Loss Plot Image"
+[image5]: ./Images/Loss_plot.png "Loss Plot Image"
 
 
 **Dependencies**
@@ -55,6 +55,12 @@ The dataset was created by me performing laps around the test track in the simlu
 - Offroad recovery
 - Track2: Clockwise 1 lap
 
+Input data: Center Images
+
+Label data: Steering Angle 
+
+Label Range 0-1, -ve for Left Turn and +ve for Right Turn
+
 Total examples = 25902
 
 Number of training examples = 20721 
@@ -65,7 +71,7 @@ Number of validation examples = 5181
 
 Image data shape = (160, 320, 3)
 
-Labels data shape = (25902,)
+Labels data shape = (25902,) 
 
 ![alt text][image1] ![alt text][image2] 
 
@@ -138,7 +144,7 @@ Plot showing the loss through the training process:
 
 If I found the model to be overfitting, I added more regularization and if I found it to be underfitting I added more data where the model tends to fail. 
 
-The plot above shows that the model is a good fit for the data.
+The plot above shows that the model is a good fit for the data. As it can be seen for the data I didnt need to run the model for 12 epochs. The model really stopped learning after the first 3-4 epochs. Since I used the checkpoint callback I know I got the best model.
 
 Next, using the Udacity provided simulator and my drive.py file, the car can be driven autonomously around the track by executing 
 
