@@ -24,18 +24,19 @@ The goals / steps of this project are the following:
 The repository consists of the following files: 
 * model.py (script used to create and train the model)
 * drive.py (script to drive the car)
+* settings.py (script containing settings to run model.py)
 * model.h5 (a trained Keras model)
 * a README writeup file (either markdown or pdf)
-* video.mp4 (a video recording of your vehicle driving autonomously around the track for at least one full lap)
+* run1.mp4 and run2.mp4 (a video recording of your vehicle driving autonomously around the track for at least one full lap)
 
 This README file describes how to output the video in the "Details About Files In This Directory" section.
 
 [//]: # (Image References)
 
-[image1]: ./Images/center_normal_0.png "Center Normal Road Image"
-[image2]: ./Images/center_right_0_146.png "Right Turn Image"
-[image3]: ./Images/center_left-0_217.png "Left Turn Image"
-[image4]: ./Images/center_bridge_0.png "Bridge Road Image"
+[image1]: ./Images/center_normal_0.jpg "Center Normal Road Image"
+[image2]: ./Images/center_right_0_146.jpg "Right Turn Image"
+[image3]: ./Images/center_left-0_217.jpg "Left Turn Image"
+[image4]: ./Images/center_bridge_0.jpg "Bridge Road Image"
 [image5]: ./examples/Loss_plot.png "Loss Plot Image"
 
 
@@ -66,7 +67,9 @@ Image data shape = (160, 320, 3)
 
 Labels data shape = (25902,)
 
-![alt text][image1] ![alt text][image2] ![alt text][image3] ![alt text][image4]
+![alt text][image1] ![alt text][image2] 
+
+![alt text][image3] ![alt text][image4]
 
 ## Model Architecture and Training Strategy
 
