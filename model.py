@@ -40,17 +40,107 @@ def LoadAllRawData(path, path_to_img):
     images = []
     measurements = []
     for filename in filenames:
-        if filename == 'DATA_0-Original' or filename == 'DATA_1-CounterClockwise' or filename == 'DATA_3-turns':
-        # if filename != 'DATA_2-path2':
+        #if filename == 'DATA_0-Original' or filename == 'DATA_1-CounterClockwise' or filename == 'DATA_3-turns' or filename == 'DATA_6_recovery' or filename == 'DATA_7_recovery'or filename == 'DATA_8_Turns' or filename == 'DATA_9_turns':
+        if filename == 'data' or filename == 'DATA_3-turns':
+            with open(path+filename+'\\'+'driving_log.csv') as csvfile:
+                reader = csv.reader(csvfile)
+                lines = [line for line in reader]
+            # load data: images and measurements
+            for line in lines:
+                image = cv2.imread(path+filename+'\\'+path_to_img+line[0].split('/')[-1])
+                try:
+                    measurment = float(line[3])
+                    images.append(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
+                    measurements.append(measurment)
+                except:
+                    print("unable to load")
+            print(filename, ' Data_size: ',len(images))
+        elif filename == 'DATA_3-turns':
+            with open(path+filename+'\\'+'driving_log.csv') as csvfile:
+                reader = csv.reader(csvfile)
+                lines = [line for line in reader]
+            # load data: images and measurements
+            for line in lines:
+                image = cv2.imread(path+filename+'\\'+path_to_img+line[0].split('/')[-1])
+                try:
+                    measurment = float(line[3])
+                    images.append(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
+                    measurements.append(measurment)
+                except:
+                    print("unable to load")
+            print(filename, ' Data_size: ',len(images))
+    return np.array(images), np.array(measurements)
+	
+def LoadAllCameraRawData(path, path_to_img):
+    filenames = [filename for filename in os.listdir(settings.DATA_PATH)]
+    images = []
+    measurements = []
+    for filename in filenames:
+        #if filename == 'DATA_0-Original' or filename == 'DATA_1-CounterClockwise' or filename == 'DATA_3-turns' or filename == 'DATA_6_recovery' or filename == 'DATA_7_recovery'or filename == 'DATA_8_Turns' or filename == 'DATA_9_turns':
+        if filename == 'data':
             with open(path+filename+'/'+'driving_log.csv') as csvfile:
                 reader = csv.reader(csvfile)
                 lines = [line for line in reader]
             # load data: images and measurements
             for line in lines:
-                image = plt.imread(path+filename+'/'+path_to_img+line[0].split('\\')[-1])
-                measurment = float(line[3])
-                images.append(image)
-                measurements.append(measurment)
+                for i in range(3):
+                    if i == 0:
+                        image = cv2.imread(path+filename+'/'+path_to_img+line[0].split('/')[-1])
+                        try:
+                            measurment = float(line[3])
+                            images.append(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
+                            measurements.append(measurment)
+                        except:
+                            print("unable to load")
+                    elif i == 1:
+                        image = cv2.imread(path+filename+'/'+path_to_img+line[1].split('/')[-1])
+                        try:
+                            measurment = float(line[3]) + settings.STEERING_CORRECTION
+                            images.append(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
+                            measurements.append(measurment)
+                        except:
+                            print("unable to load")
+                    elif i == 2:
+                        image = cv2.imread(path+filename+'/'+path_to_img+line[2].split('/')[-1])
+                        try:
+                            measurment = float(line[3]) - settings.STEERING_CORRECTION
+                            images.append(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
+                            measurements.append(measurment)
+                        except:
+                            print("unable to load")
+                
+            print(filename, ' Data_size: ',len(images))
+        elif filename == 'DATA_3-turns':
+            with open(path+filename+'/'+'driving_log.csv') as csvfile:
+                reader = csv.reader(csvfile)
+                lines = [line for line in reader]
+            # load data: images and measurements
+            for line in lines:
+                for i in range(3):
+                    if i == 0:
+                        image = cv2.imread(path+filename+'/'+path_to_img+line[0].split('\\')[-1])
+                        try:
+                            measurment = float(line[3])
+                            images.append(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
+                            measurements.append(measurment)
+                        except:
+                            print("unable to load")
+                    elif i == 1:
+                        image = cv2.imread(path+filename+'/'+path_to_img+line[1].split('\\')[-1])
+                        try:
+                            measurment = float(line[3]) + settings.STEERING_CORRECTION
+                            images.append(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
+                            measurements.append(measurment)
+                        except:
+                            print("unable to load")
+                    elif i == 2:
+                        image = cv2.imread(path+filename+'/'+path_to_img+line[2].split('\\')[-1])
+                        try:
+                            measurment = float(line[3]) - settings.STEERING_CORRECTION
+                            images.append(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
+                            measurements.append(measurment)
+                        except:
+                            print("unable to load")
             print(filename, ' Data_size: ',len(images))
     return np.array(images), np.array(measurements)
 
@@ -124,39 +214,44 @@ def CreateNvidiaModel():
     model = Sequential()
     model.add(Lambda((lambda x: x/255.0 - 0.5), input_shape=(160,320,3)))
     model.add(Cropping2D(cropping=((65,25), (0,0))))
-    model.add(Convolution2D(24,5,5, subsample=(2,2), W_regularizer=l2(0.001), activation="relu"))
-    model.add(Convolution2D(36,5,5, subsample=(2,2), W_regularizer=l2(0.001), activation="relu"))
-    model.add(Convolution2D(48,5,5, subsample=(2,2), W_regularizer=l2(0.001), activation="relu"))
-    model.add(Convolution2D(64,3,3, W_regularizer=l2(0.001), activation="relu"))
-    model.add(Convolution2D(64,3,3, W_regularizer=l2(0.001), activation="relu"))
+    model.add(Convolution2D(24,5,5, subsample=(2,2), W_regularizer=l2(0.001), activation="elu"))
+    model.add(Dropout(0.3))
+    model.add(Convolution2D(36,5,5, subsample=(2,2), W_regularizer=l2(0.001), activation="elu"))
+    model.add(Dropout(0.3))
+    model.add(Convolution2D(48,5,5, subsample=(2,2), W_regularizer=l2(0.001), activation="elu"))
+    model.add(Dropout(0.3))
+    model.add(Convolution2D(64,3,3, W_regularizer=l2(0.001), activation="elu"))
+    model.add(Dropout(0.3))
+    model.add(Convolution2D(64,3,3, W_regularizer=l2(0.001), activation="elu"))
+    model.add(Dropout(0.3))
     model.add(Flatten())
-    model.add(Dense(100, W_regularizer=l2(0.001), activation="relu"))
+    
+    model.add(Dense(100, W_regularizer=l2(0.001), activation="elu"))
     model.add(Dropout(0.3))
-    model.add(Dense(50, W_regularizer=l2(0.001), activation="relu")) 
+    model.add(Dense(50, W_regularizer=l2(0.001), activation="elu")) 
     model.add(Dropout(0.3))
-    model.add(Dense(10, W_regularizer=l2(0.001), activation="relu")) 
+    model.add(Dense(10, W_regularizer=l2(0.001), activation="elu")) 
     model.add(Dropout(0.3))
     model.add(Dense(1)) 
+    return model
+	
+def CreateOrigNvidiaModel():
+    model = Sequential()
+    model.add(Lambda(lambda x: x/127.5-1.0, input_shape=(160,320,3)))
+    model.add(Cropping2D(cropping=((60,25), (0,0))))
+    model.add(Convolution2D(24, 5, 5, activation='elu', subsample=(2, 2)))
+    model.add(Convolution2D(36, 5, 5, activation='elu', subsample=(2, 2)))
+    model.add(Convolution2D(48, 5, 5, activation='elu', subsample=(2, 2)))
+    model.add(Convolution2D(64, 3, 3, activation='elu'))
+    model.add(Convolution2D(64, 3, 3, activation='elu'))
+    model.add(Dropout(0.5))
+    model.add(Flatten())
+    model.add(Dense(100, activation='elu'))
+    model.add(Dense(50, activation='elu'))
+    model.add(Dense(10, activation='elu'))
+    model.add(Dense(1))
     return model
 
-def CreateNvidiaOldModel():
-    model = Sequential()
-    model.add(Lambda((lambda x: x/255.0 - 0.5), input_shape=(160,320,3)))
-    model.add(Cropping2D(cropping=((65,25), (0,0))))
-    model.add(Convolution2D(24,5,5, subsample=(2,2), activation="relu"))
-    model.add(Convolution2D(36,5,5, subsample=(2,2), activation="relu"))
-    model.add(Convolution2D(48,5,5, subsample=(2,2), activation="relu"))
-    model.add(Convolution2D(64,3,3, activation="relu"))
-    model.add(Convolution2D(64,3,3, activation="relu"))
-    model.add(Flatten())
-    model.add(Dense(100, W_regularizer=l2(0.001)))
-    model.add(Dropout(0.3))
-    model.add(Dense(50, W_regularizer=l2(0.001))) 
-    model.add(Dropout(0.3))
-    model.add(Dense(10, W_regularizer=l2(0.001))) 
-    model.add(Dropout(0.3))
-    model.add(Dense(1)) 
-    return model
 	
 ###############################################
 #------------------- MAIN --------------------#
@@ -168,7 +263,7 @@ if os.path.isfile(settings.DATA_PATH + settings.DATA_PICKLE_FILENAME):
     X_train, y_train, X_test, y_test = LoadFromPickleFile()
 else:
     #load raw data
-    X_train, y_train = LoadAllRawData(settings.DATA_PATH, settings.PATH_TO_IMG)
+    X_train, y_train = LoadAllCameraRawData(settings.DATA_PATH, settings.PATH_TO_IMG)
     #shuffle
     sklearn.utils.shuffle(X_train, y_train)
     # Split data - NOTE: not splitting any test data, using the simulator to test instead
@@ -186,7 +281,7 @@ PrintStats()
 
 
 # DEFINE MODEL
-model = CreateNvidiaOldModel()
+model = CreateOrigNvidiaModel()
 
 model.compile(loss='mse', optimizer='adam',  metrics=['accuracy'])
 
