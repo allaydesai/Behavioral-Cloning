@@ -79,6 +79,8 @@ Labels data shape = (25902,)
 
 ## Model Architecture and Training Strategy
 
+### Model
+
 For the purpose of this project I chose the model architecture proposed by the autonomus team at nvidia in the following paper:
 https://devblogs.nvidia.com/deep-learning-self-driving-cars/
 
@@ -112,7 +114,7 @@ The network architecture is shown below:
 | Dropout					|			0.3 - Regularization									|
 | Fully connected				| 1 output, Linear activation        									|
 
-**Training**
+### Training
 
 Epochs: 30 (Model stopped training after 8-12 epochs due to early stopping)
 
