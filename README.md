@@ -25,7 +25,9 @@ The repository consists of the following files:
 * model.py (script used to create and train the model)
 * drive.py (script to drive the car)
 * settings.py (script containing settings to run model.py)
-* model.h5 (a trained Keras model)
+* model.h5 (a trained Keras model with only center camera)
+* model_all_camera.h5 (a trained Keras model with selective data and center, left and right camera)
+* model_all_camera_all_data.h5 (a trained Keras model with all data and all camera angles)
 * a README writeup file (either markdown or pdf)
 * run1.mp4 and run2.mp4 (a video recording of your vehicle driving autonomously around the track for at least one full lap)
 
@@ -57,7 +59,7 @@ The dataset was created by me performing laps around the test track in the simlu
 
 Input data: Center Images
 
-Label data: Steering Angle 
+Label data: Steering Angle (adjustment factor of 0.2 for left and right camera)
 
 Label Range 0-1, -ve for Left Turn and +ve for Right Turn
 
@@ -96,27 +98,25 @@ The network architecture is shown below:
 | Lambda         		| Normalization: x/255 - 0  							| 
 | Cropping2D         		| Crop image by (65,25), (0,0)   							| 
 | Convolution 5x5     	| 24 filters, 2x2 stride, VALID padding, L2 regularize weights 	|
-| RELU					|			Activation Function									|
+| ELU					|			Activation Function									|
 | Convolution 5x5     	| 36 filters, 2x2 stride, VALID padding, L2 regularize weights 	|
-| RELU					|			Activation Function									|
+| ELU					|			Activation Function									|
 | Convolution 5x5     	| 48 filters, 2x2 stride, VALID padding, L2 regularize weights 	|
-| RELU					|			Activation Function									|
+| ELU					|			Activation Function									|
 | Convolution 3x3     	| 64 filters, 1x1 stride, VALID padding, L2 regularize weights 	|
-| RELU					|			Activation Function									|
+| ELU					|			Activation Function									|
 | Convolution 3x3     	| 64 filters, 1x1 stride, VALID padding, L2 regularize weights 	|
-| RELU					|			Activation Function									|
+| ELU					|			Activation Function									|
 | Flatten	    |       									|
-| Fully connected		| 100 outputs, L2 regularize weights,RELU activation        									|
 | Dropout					|			0.3 - Regularization									|
-| Fully connected		| 50 outputs, L2 regularize weights, RELU activation        									|
-| Dropout					|			0.3	- Regularization								|
-| Fully connected		| 10 outputs, L2 regularize weights, RELU activation        									|
-| Dropout					|			0.3 - Regularization									|
+| Fully connected		| 100 outputs, L2 regularize weights,ELU activation        									|
+| Fully connected		| 50 outputs, L2 regularize weights, ELU activation        									|
+| Fully connected		| 10 outputs, L2 regularize weights, ELU activation        									|
 | Fully connected				| 1 output, Linear activation        									|
 
 ### Training
 
-Epochs: 30 (Model stopped training after 8-12 epochs due to early stopping)
+Epochs: 10 (Model stopped training after 8-12 epochs due to early stopping)
 
 Batch size: 128
 
